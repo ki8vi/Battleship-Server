@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "Node16",
+    "rootDir": "./",
+    "moduleResolution": "Node16",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
+  },
+  "include": ["./index.ts", "./src"],
+  "exclude": ["./dist", "./front", "./node_modules"]
+}
