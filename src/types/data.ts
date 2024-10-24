@@ -1,12 +1,12 @@
 
 type TypeofInput = 'reg' | 'update_winners' | 'create_room' | 'add_user_to_room' | 'create_game' | 'update_room' | 'add_ships' | 'start_game' | 'attack' | 'randomAttack' | 'turn' | 'finish';
 
-type DataIn = {
+export type DataIn = {
     name: string,
     password: string,
 }
 
-type DataOut = {
+export type DataOut = {
     name: string,
     index: number | string,
     error: boolean,
@@ -15,6 +15,11 @@ type DataOut = {
 
 export type RegData = {
     type: TypeofInput,
-    data: DataIn | DataOut,
+    data: string,
     id: number,
+}
+
+export type Player = {
+    name: string,
+    password: string
 }

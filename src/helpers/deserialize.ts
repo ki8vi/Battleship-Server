@@ -1,5 +1,5 @@
 import { RawData } from "ws";
 
-export const deserialize = <T>(data: RawData): T => {
+export const deserialize = (data: RawData) => {
     return JSON.parse(String(data));
 }

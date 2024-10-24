@@ -1,5 +1,4 @@
-import { socketHandler } from '../handlers/msgHandler';
-import { deserialize } from '../helpers/deserialize'
+import mainConstroller from '../controller/main';
 import { WebSocketServer } from 'ws';
 
 export const startSocket = (port: number) => {
@@ -7,15 +6,10 @@ export const startSocket = (port: number) => {
 
     socket.on('connection', (server) => {
         console.log('Socket Connected');
-        server.on('message', (data) => { socketHandler(data, server) });
-        server.on('error', console.error);
-        server.on('close', () => {
-            console.log('Socket Disconnected');
-        });
-
-        
+        server.on('message', (data) => { mainConstroller(data, server) });
+        server.on('error', console.error);     
     });
 
-    console.log(`Socket running on server://localhost:${port}`);
+    console.log(`Socket running on port: ${port}`);
 };
 
