@@ -13,7 +13,7 @@ export type DataOut = {
     errorText: string,
 }
 
-export type RegData = {
+export type BaseData = {
     type: TypeofInput,
     data: string,
     id: number,
@@ -21,5 +21,23 @@ export type RegData = {
 
 export type Player = {
     name: string,
-    password: string
+    password: string,
+    wins?: number
 }
+
+export type Win = {
+    name: string,
+    wins: number
+} 
+
+export type WinnerData = Win[];
+
+export type RoomPlayer = {
+    name: string;
+    index: number | string | null;
+};
+
+export type GameRoom = {
+    roomId: string;
+    roomUsers: RoomPlayer[];
+};

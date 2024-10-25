@@ -1,24 +1,77 @@
-import sendRegOut from '../helpers/sendReg';
-import Players from '../playersStore/players';
-import { Player, RegData } from '../types/data';
-import { WebSocket } from 'ws';
+import sendRegOut from "../helpers/sendReg";
+import Players from "../store/players";
+import SocketStore from "../store/sokets";
+import { Player, BaseData } from "../types/data";
+import { WebSocket } from "ws";
 
 const players = Players.getInstance();
+const sockets = SocketStore.getInstance();
 
-export const regHandler = (req: RegData, server: WebSocket): void => {
-  const { type, data, id } = req;
+export const regHandler = (req: BaseData, server: WebSocket): void => {
+  const { type, data } = req;
   const parsedData = JSON.parse(data);
-  const currPlayer: Player = { name: parsedData.name, password: parsedData.password };
-  if(!players.checkPlayerByName(currPlayer)) {
+  const currPlayer: Player = {
+    name: parsedData.name,
+    password: parsedData.password,
+    wins: 0,
+  };
+  if (!players.checkPlayerByName(currPlayer)) {
     players.addPlayer(currPlayer);
-    sendRegOut(server, type, currPlayer, players.getPlayerIndex(currPlayer), false);
+    players.setMyIndex(currPlayer);
+    sockets.setSocket(currPlayer.name, server);
+    sendRegOut(
+      server,
+      type,
+      currPlayer,
+      players.getPlayerIndex(currPlayer),
+      false
+    );
   } else {
-    if(players.checkPassword(currPlayer)) {
-      sendRegOut(server, type, currPlayer, players.getPlayerIndex(currPlayer), false);
+
+    const existSocket = sockets.getSocket(currPlayer.name);
+    
+    if (existSocket) {
+      sendRegOut(
+        server,
+        type,
+        currPlayer,
+        players.getPlayerIndex(currPlayer),
+        true,
+        "User already logged in from another tab!"
+      );
+      return;
+    }
+
+
+    if (players.checkPassword(currPlayer)) {
+      sockets.setSocket(currPlayer.name, server);
+
+      sendRegOut(
+        server,
+        type,
+        currPlayer,
+        players.getPlayerIndex(currPlayer),
+        false
+      );
     } else {
-      sendRegOut(server, type, currPlayer, players.getPlayerIndex(currPlayer), true, 'The password is incorrect!');
+      sendRegOut(
+        server,
+        type,
+        currPlayer,
+        players.getPlayerIndex(currPlayer),
+        true,
+        "The password is incorrect!"
+      );
     }
   }
-  console.log(`Socket output => ${type}: ${JSON.stringify(currPlayer)}`)
-  console.log(players.getPlayers())
+  console.log(`Socket output => ${type}: ${JSON.stringify(currPlayer)}`);
+
+
+  server.on('close', () => {
+    const playerName = parsedData.name;
+    if (playerName) {
+        sockets.deleteSocket(playerName);
+        console.log(`Socket for ${playerName} disconnected`);
+    }
+});
 };
