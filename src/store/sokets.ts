@@ -1,4 +1,7 @@
 import { WebSocket } from "ws";
+import Players from "./players";
+
+const players = Players.getInstance();
 
 export default class SocketStore {
     private static instance: SocketStore;

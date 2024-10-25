@@ -4,6 +4,7 @@ const CONSTANTS = {
     CREATE_ROOM: 'create_room',
     UPDATE_ROOM: 'update_room',
     ADD_USER_TO_ROOM: 'add_user_to_room',
+    CREATE_GAME: 'create_game',
 }
 
 export default CONSTANTS;

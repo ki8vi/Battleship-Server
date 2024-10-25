@@ -1,4 +1,4 @@
-import { GameRoom } from "../types/data";
+import { GameRoom, Player, RoomPlayer } from "../types/data";
 
 export default class RoomsStore {
 
@@ -33,6 +33,25 @@ export default class RoomsStore {
         return false;
     }
 
+    public addPlayerToRoom(roomId: string, player: RoomPlayer): boolean {
+        const room = this.rooms.find((room) => room.roomId === roomId);
+        if (room && room.roomUsers.length < 2) {
+            const isPlayerInRoom = room.roomUsers.some((user) => user.name === player.name);
+            if (!isPlayerInRoom) {
+                room.roomUsers.push(player);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public getRoomsWithOnePlayer(): GameRoom[] {
+        return this.rooms.filter((room) => room.roomUsers.length === 1);
+    }
+
+    public getRoomById(roomId: string): GameRoom | undefined {
+        return this.rooms.find((room) => room.roomId === roomId);
+    }
   
 }
 
