@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import sendRegOut from "../helpers/sendReg";
 import Players from "../store/players";
 import SocketStore from "../store/sokets";
@@ -7,50 +8,54 @@ import { WebSocket } from "ws";
 const players = Players.getInstance();
 const sockets = SocketStore.getInstance();
 
-export const regHandler = (req: BaseData, server: WebSocket): void => {
+const regPlayer = (req: BaseData, server: WebSocket): void => {
   const { type, data } = req;
   const parsedData = JSON.parse(data);
+  const id = randomUUID();
   const currPlayer: Player = {
     name: parsedData.name,
     password: parsedData.password,
+    id,
     wins: 0,
   };
   if (!players.checkPlayerByName(currPlayer)) {
     players.addPlayer(currPlayer);
-    players.setMyIndex(currPlayer);
-    sockets.setSocket(currPlayer.name, server);
+    players.setMyId(currPlayer.id);
+    sockets.setSocket(currPlayer.id, server);
     sendRegOut(
       server,
       type,
       currPlayer,
-      players.getPlayerIndex(currPlayer),
+      currPlayer.id,
       false
     );
+   
   } else {
-
-    const existSocket = sockets.getSocket(currPlayer.name);
-    
-    if (existSocket) {
-      sendRegOut(
-        server,
-        type,
-        currPlayer,
-        players.getPlayerIndex(currPlayer),
-        true,
-        "User already logged in from another tab!"
-      );
-      return;
+    const existPlayerId = players.getPlayers().find((pl) => pl.name === currPlayer.name)?.id;
+    if(existPlayerId) {
+      const existSocket = sockets.getSocket(existPlayerId);
+      if(existSocket && existSocket.readyState === WebSocket.OPEN) {
+        sendRegOut(
+          server,
+          type,
+          currPlayer,
+          currPlayer.id,
+          true,
+          "User already logged in from another tab!"
+        );
+        return;
+      } else {
+        sockets.setSocket(existPlayerId, server);
+      }
     }
-
-
-    if (players.checkPassword(currPlayer)) {
-      sockets.setSocket(currPlayer.name, server);
+    if(players.checkPassword(currPlayer)) {
+      sockets.setSocket(currPlayer.id, server);
 
       sendRegOut(
         server,
         type,
         currPlayer,
-        players.getPlayerIndex(currPlayer),
+        currPlayer.id,
         false
       );
     } else {
@@ -58,20 +63,13 @@ export const regHandler = (req: BaseData, server: WebSocket): void => {
         server,
         type,
         currPlayer,
-        players.getPlayerIndex(currPlayer),
+        currPlayer.id,
         true,
         "The password is incorrect!"
       );
     }
   }
   console.log(`Socket output => ${type}: ${JSON.stringify(currPlayer)}`);
-
-
-  server.on('close', () => {
-    const playerName = parsedData.name;
-    if (playerName) {
-        sockets.deleteSocket(playerName);
-        console.log(`Socket for ${playerName} disconnected`);
-    }
-});
 };
+
+export default regPlayer;

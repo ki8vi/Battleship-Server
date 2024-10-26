@@ -1,15 +1,15 @@
 import { RawData, WebSocket } from "ws";
 import { deserialize } from "../helpers/deserialize";
-import { regHandler } from "../handlers/regHandler";
+import regPlayer from "../handlers/reg";
 import CONSTANTS from "../constants";
-import updateWinners from "../helpers/updateWinners";
-import updateRoom from "../handlers/updateRoom";
-import SocketStore from "../store/sokets";
 import createRoom from "../handlers/createRoom";
 import createGame from "../handlers/createGame";
+import addShips from "../handlers/addShips";
+import SocketStore from "../store/sokets";
+import updateRoom from "../handlers/updateRoom";
+import updateWinners from "../helpers/updateWinners";
 
-const sockets = SocketStore.getInstance();
-
+const socketsMap = SocketStore.getInstance();
 
 const mainConstroller = (dataInput: RawData, server: WebSocket) => {
     const parsedReq = deserialize(dataInput);
@@ -17,17 +17,19 @@ const mainConstroller = (dataInput: RawData, server: WebSocket) => {
     console.log('main: controller: ',parsedReq);
     switch(type) {
         case CONSTANTS.REG:
-            regHandler(parsedReq, server);
-            sockets.sendToSockets(updateWinners);
-            sockets.sendToSockets(updateRoom);
+            regPlayer(parsedReq, server);
+            socketsMap.sendToSockets(updateRoom);
+            socketsMap.sendToSockets(updateWinners);
             break;
         case CONSTANTS.CREATE_ROOM:
             createRoom(server);
-            sockets.sendToSockets(updateRoom);
+            socketsMap.sendToSockets(updateRoom);
             break;
         case CONSTANTS.ADD_USER_TO_ROOM:
-            createGame(data);
-            sockets.sendToSockets(updateRoom);
+            createGame(data, server);
+            break;
+        case CONSTANTS.ADD_SHIPS:
+            addShips(data, server);
             break;
         default:
             console.log('from default of controller', type)

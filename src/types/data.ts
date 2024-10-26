@@ -22,6 +22,7 @@ export type BaseData = {
 export type Player = {
     name: string,
     password: string,
+    id: string,
     wins?: number
 }
 
@@ -41,3 +42,16 @@ export type GameRoom = {
     roomId: string;
     roomUsers: RoomPlayer[];
 };
+
+export type GameOptions = { gameId: string, meId: string, enemyId: string };
+
+export type Ships = {
+    position: {
+        x: number,
+        y: number,
+    },
+    direction: boolean,
+    length: number,
+    type: 'small' | 'medium' | 'large' | 'huge'
+    
+}

@@ -1,7 +1,4 @@
 import { WebSocket } from "ws";
-import Players from "./players";
-
-const players = Players.getInstance();
 
 export default class SocketStore {
     private static instance: SocketStore;
@@ -18,16 +15,16 @@ export default class SocketStore {
         return SocketStore.instance;
     }
 
-    public getSocket(player: string): WebSocket | undefined {
-        return this.sockets.get(player);
+    public getSocket(playerID: string): WebSocket | undefined {
+        return this.sockets.get(playerID);
     }
 
-    public setSocket(player: string, socket: WebSocket): void {
-        this.sockets.set(player, socket);
+    public setSocket(playerID: string, socket: WebSocket): void {
+        this.sockets.set(playerID, socket);
     }
 
-    public deleteSocket(player: string): void {
-        this.sockets.delete(player);
+    public deleteSocket(playerID: string): void {
+        this.sockets.delete(playerID);
     }
 
     public getAllSockets(): Map<string, WebSocket> {
@@ -36,7 +33,18 @@ export default class SocketStore {
 
     public sendToSockets(cb: (socket: WebSocket) => void): void {
         for(const sckt of this.sockets) {
-            cb(sckt[1]);
+            if(sckt[1]) {
+                cb(sckt[1]);
+            }
         }
+    }
+
+    public getIdBySocket(socket: WebSocket): string | undefined {
+        for (const [id, sckt] of this.sockets.entries()) {
+            if (sckt === socket) {
+                return id;
+            }
+        }
+        return undefined;
     }
 }
