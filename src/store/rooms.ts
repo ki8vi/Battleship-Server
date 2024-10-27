@@ -53,16 +53,6 @@ export default class RoomsStore {
         return this.rooms.find((room) => room.roomId === roomId);
     }
 
-    // public deletePlayerFromRooms(playerId: string): void {
-    //     this.rooms.forEach((room) => {
-    //         room.roomUsers = room.roomUsers.filter((pl) => pl.index !== playerId);
-    //         if (!room.roomUsers.length) {
-    //             console.log('delete room')
-    //             this.deleteRoom(room.roomId);
-    //         }
-    //     });
-    // }
-
     public deleteRoomsWithPlayers(playerIds: string[]): void {
         this.rooms = this.rooms.filter(room => {
             const isInRoom = room.roomUsers.some(user => playerIds.includes(user.index as string));

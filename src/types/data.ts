@@ -52,6 +52,8 @@ export type Ships = {
     },
     direction: boolean,
     length: number,
-    type: 'small' | 'medium' | 'large' | 'huge'
-    
+    type: 'small' | 'medium' | 'large' | 'huge',
+    hit: number
 }
+
+export type Status = 'miss' | 'killed' | 'shot';

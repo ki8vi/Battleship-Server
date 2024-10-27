@@ -3,6 +3,7 @@ import Game from "../store/game";
 import SocketStore from "../store/sokets";
 import Players from "../store/players";
 import CONSTANTS from "../constants";
+import turn from "./turn";
 
 const sockets = SocketStore.getInstance()
 const gameOptions = Game.getInstance();
@@ -12,27 +13,23 @@ const addShips = (data: string, server: WebSocket) => {
     const parsedData = JSON.parse(data);
     const inputGameId = parsedData.gameId;
     const myGameOptions = gameOptions.getPlayersOptions();
-    const mePlayer = players.getPlayers().find((pl) => pl.id === parsedData.indexPlayer);
     const ships = parsedData.ships;
-
-
+    // const player = players.getPlayers().find((pl) => pl.id === parsedData.indexPlayer);
+    
     if(inputGameId === myGameOptions.gameId) {
 
         const meId = myGameOptions.meId;
         const enemyId = myGameOptions.enemyId;
         if(meId === parsedData.indexPlayer) {
-            console.log('may name is ', players.getPlayers().find((pl) => pl.id === meId)?.name)
             gameOptions.setShips(meId, ships);
         }
         if(enemyId === parsedData.indexPlayer) {
-            console.log('enemy name is ', players.getPlayers().find((pl) => pl.id === enemyId)?.name)
             gameOptions.setShips(enemyId, ships);
         }
         
         if(gameOptions.getShips(meId)?.length && gameOptions.getShips(enemyId)?.length) {
             const mySocket = sockets.getSocket(meId);
             if(mySocket && mySocket.readyState === WebSocket.OPEN) {
-                console.log('my socket')
                 const shipsOut = {
                     type: CONSTANTS.START_GAME,
                     data: JSON.stringify({ ships, currentPlayerIndex: meId }),
@@ -43,7 +40,6 @@ const addShips = (data: string, server: WebSocket) => {
             }
             const enemySocket = sockets.getSocket(enemyId);
             if(enemySocket && enemySocket.readyState === WebSocket.OPEN) {
-                console.log('enemy socket')
                 const shipsOut = {
                     type: CONSTANTS.START_GAME,
                     data: JSON.stringify({ ships, currentPlayerIndex: enemyId }),
@@ -52,6 +48,7 @@ const addShips = (data: string, server: WebSocket) => {
                 }
                 enemySocket.send(JSON.stringify(shipsOut));
             }
+            turn(server, meId);
         }
 
 

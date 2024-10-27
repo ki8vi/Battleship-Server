@@ -8,6 +8,7 @@ import addShips from "../handlers/addShips";
 import SocketStore from "../store/sokets";
 import updateRoom from "../handlers/updateRoom";
 import updateWinners from "../helpers/updateWinners";
+import attack from "../handlers/attack";
 
 const socketsMap = SocketStore.getInstance();
 
@@ -30,6 +31,12 @@ const mainConstroller = (dataInput: RawData, server: WebSocket) => {
             break;
         case CONSTANTS.ADD_SHIPS:
             addShips(data, server);
+            break;
+        case CONSTANTS.ATTACK:
+            attack(data, server);
+            break;
+        case CONSTANTS.RANDOM_ATTACK:
+            // attack(data, server);
             break;
         default:
             console.log('from default of controller', type)
