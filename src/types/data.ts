@@ -45,11 +45,10 @@ export type GameRoom = {
 
 export type GameOptions = { gameId: string, meId: string, enemyId: string };
 
+export type Position = { x: number; y: number };
+
 export type Ships = {
-    position: {
-        x: number,
-        y: number,
-    },
+    position: Position,
     direction: boolean,
     length: number,
     type: 'small' | 'medium' | 'large' | 'huge',

@@ -33,7 +33,7 @@ export default class SocketStore {
 
     public sendToSockets(cb: (socket: WebSocket) => void): void {
         for(const sckt of this.sockets) {
-            if(sckt[1]) {
+            if(sckt[1].readyState === WebSocket.OPEN) {
                 cb(sckt[1]);
             }
         }

@@ -73,4 +73,12 @@ export default class Game {
     public getShoots(playerId: string): Set<string> | undefined {
         return this.shoots.get(playerId);
     }
+
+    public resetGame(): void {
+        this.shoots.clear();
+        this.mapShips.clear;
+        this.diedShips = 0;
+        this.currTurn = '';
+        this.gameOptions = { gameId: randomUUID(), meId: '', enemyId: '' }; 
+    }
 }

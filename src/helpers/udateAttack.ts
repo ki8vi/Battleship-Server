@@ -1,12 +1,12 @@
-import CONSTANTS from "../constants";
-import SocketStore from "../store/sokets";
-import { Status } from "../types/data";
+import CONSTANTS from '../constants';
+import SocketStore from '../store/sokets';
+import { Position, Status } from '../types/data';
 
 
 const sockets = SocketStore.getInstance();
 
 const updateAttack = (
-    position: { x: number; y: number },
+    position: Position,
     currentPlayerId: string,
     enemyId: string,
     status: Status

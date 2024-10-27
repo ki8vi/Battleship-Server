@@ -9,6 +9,8 @@ import SocketStore from "../store/sokets";
 import updateRoom from "../handlers/updateRoom";
 import updateWinners from "../helpers/updateWinners";
 import attack from "../handlers/attack";
+import randomAttack from "../handlers/randomAttack";
+import singlePlay from "../handlers/singlePlay";
 
 const socketsMap = SocketStore.getInstance();
 
@@ -36,7 +38,10 @@ const mainConstroller = (dataInput: RawData, server: WebSocket) => {
             attack(data, server);
             break;
         case CONSTANTS.RANDOM_ATTACK:
-            // attack(data, server);
+            randomAttack(data, server);
+            break;
+        case CONSTANTS.SINGLE_PLAY:
+            // singlePlay(data, server);
             break;
         default:
             console.log('from default of controller', type)

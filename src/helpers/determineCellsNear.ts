@@ -1,8 +1,7 @@
-import updateAttack from "./udateAttack";
+import { Position } from '../types/data';
+import updateAttack from './udateAttack';
 
-type Cells = { x: number; y: number }[];
-
-const determineNearCells = (cells: Cells, meId: string, enemyId: string) => {
+const determineNearCells = (cells: Position[], meId: string, enemyId: string) => {
     const nearCells = new Set<{ x: number; y: number }>();
     
     const corners = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];

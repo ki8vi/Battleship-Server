@@ -14,7 +14,6 @@ const addShips = (data: string, server: WebSocket) => {
     const inputGameId = parsedData.gameId;
     const myGameOptions = gameOptions.getPlayersOptions();
     const ships = parsedData.ships;
-    // const player = players.getPlayers().find((pl) => pl.id === parsedData.indexPlayer);
     
     if(inputGameId === myGameOptions.gameId) {
 

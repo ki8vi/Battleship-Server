@@ -44,10 +44,14 @@ export default class Players {
     }
 
     public takeWinners(): WinnerData {
-        return this.players.reduce<WinnerData>((acc, pl) => {
+        const winners = this.players.reduce<WinnerData>((acc, pl) => {
             acc.push({ name: pl.name, wins: pl.wins! });
             return acc;
         }, []);
+        
+        winners.sort((a, b) => b.wins - a.wins);
+        
+        return winners;
     }
 
     public getMyId(): string | null {
@@ -60,5 +64,14 @@ export default class Players {
 
     public deletePlayer(playerId: string): void {
         this.players = this.players.filter((pl) => pl.id !== playerId);
-    } 
+    }
+
+    public addWin(playerId: string): boolean {
+        const winner = this.players.find((pl) => pl.id === playerId);
+        if(winner) {
+            winner.wins! += 1;
+            return true;
+        }
+        return false;
+    }
 }

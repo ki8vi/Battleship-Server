@@ -6,17 +6,19 @@ import updateAttack from "../helpers/udateAttack";
 import getCells from "../helpers/getCells";
 import determineNearCells from "../helpers/determineCellsNear";
 import { Status } from "../types/data";
+import checkForWinner from "../helpers/winner";
 
 const gameOptions = Game.getInstance();
 
-const attack = (data: string, server: WebSocket) => {
+
+const attack = (data: string, server: WebSocket): Status | null => {
     const me = getMe(server);
     const myGameOptions = gameOptions.getPlayersOptions();
     const parsedData = JSON.parse(data);
     const { gameId, x, y, indexPlayer } = parsedData;
     const currrTurn = gameOptions.getTurn();
 
-    if (indexPlayer !== currrTurn || myGameOptions.gameId !== gameId) return;
+    if (indexPlayer !== currrTurn || myGameOptions.gameId !== gameId) return null;
 
     if (me && !gameOptions.hasShoot(me.id, x, y)) {
         const allPlayersShips = gameOptions.getAllPlayerShips();
@@ -74,8 +76,12 @@ const attack = (data: string, server: WebSocket) => {
             gameOptions.addShoot(me.id, x, y);
 
             turn(server, status === 'miss' ? enemyId : me.id);
+
+            checkForWinner(enemyShips, me.id, [me.id, enemyId]);
+            return status;
         }
     }
+    return null;
 };
 
 export default attack;

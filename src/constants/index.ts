@@ -10,6 +10,8 @@ const CONSTANTS = {
     TURN: 'turn',
     ATTACK: 'attack',
     RANDOM_ATTACK :'randomAttack',
+    SINGLE_PLAY: 'single_play',
+    FINISH: 'finish'
 }
 
 export default CONSTANTS;

@@ -1,4 +1,4 @@
-type Position = { x: number; y: number };
+import { Position } from "../types/data";
 
 const getCells = (pos: Position, length: number, direction: boolean): Position[] => {
         const cells: { x: number; y: number }[] = [];

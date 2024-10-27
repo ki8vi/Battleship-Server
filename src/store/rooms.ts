@@ -1,4 +1,4 @@
-import { GameRoom, Player, RoomPlayer } from "../types/data";
+import { GameRoom, RoomPlayer } from "../types/data";
 
 export default class RoomsStore {
 
