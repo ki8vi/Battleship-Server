@@ -17,22 +17,22 @@ const attack = (data: string, server: WebSocket): Status | null => {
     const parsedData = JSON.parse(data);
     const { gameId, x, y, indexPlayer } = parsedData;
     const currrTurn = gameOptions.getTurn();
-
+  
     if (indexPlayer !== currrTurn || myGameOptions.gameId !== gameId) return null;
-
     if (me && !gameOptions.hasShoot(me.id, x, y)) {
         const allPlayersShips = gameOptions.getAllPlayerShips();
         let status: Status = 'miss';
         let enemyShips;
         let enemyId: string | null = null;
 
+    
         for (const [id, ships] of allPlayersShips) {
+          
             if (id !== me.id) {
                 enemyShips = ships;
                 enemyId = id;
             }
         }
-
         if (enemyShips && enemyId) {
             for (const ship of enemyShips) {
                 const occupiedCells = getCells(ship.position, ship.length, ship.direction);

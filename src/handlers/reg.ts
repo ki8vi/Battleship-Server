@@ -69,7 +69,6 @@ const regPlayer = (req: BaseData, server: WebSocket): void => {
       );
     }
   }
-  console.log(`Socket output => ${type}: ${JSON.stringify(currPlayer)}`);
 };
 
 export default regPlayer;

@@ -7,12 +7,14 @@ export default class Game {
     private mapShips: Map<string, Ships[]>
     private currTurn: string = '';
     private diedShips: number = 0;
-    private shoots: Map<string, Set<string>>
+    private shoots: Map<string, Set<string>>;
+    private isBotModeEnabled: boolean;
 
     private constructor() {
         this.gameOptions = { gameId: randomUUID(), meId: '', enemyId: '' };
         this.mapShips = new Map();
         this.shoots = new Map();
+        this.isBotModeEnabled = false;
     }
 
     public static getInstance(): Game {
@@ -79,6 +81,19 @@ export default class Game {
         this.mapShips.clear;
         this.diedShips = 0;
         this.currTurn = '';
-        this.gameOptions = { gameId: randomUUID(), meId: '', enemyId: '' }; 
+        this.gameOptions = { gameId: randomUUID(), meId: '', enemyId: '' };
+        this.isBotModeEnabled = false;
+    }
+
+    public getBotModeState(): boolean {
+        return this.isBotModeEnabled;
+    }
+
+    public switchToBotMode(): void {
+        this.isBotModeEnabled = true;
+    }
+
+    public setGameId(gameId: string): void {
+        this.gameOptions.gameId = gameId
     }
 }

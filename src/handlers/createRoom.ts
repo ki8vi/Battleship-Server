@@ -17,7 +17,7 @@ const createRoom = (server: WebSocket): void => {
             const newRoom: GameRoom = { roomId, roomUsers: [roomPlayer] };
             roomStore.addNewRoom(newRoom);
         } else {
-            console.log(`Player ${me.name} already in room!`);
+            console.log(`${me.name} IN ROOM!`);
         }
     }
 };

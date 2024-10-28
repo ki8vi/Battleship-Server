@@ -14,10 +14,9 @@ import singlePlay from "../handlers/singlePlay";
 
 const socketsMap = SocketStore.getInstance();
 
-const mainConstroller = (dataInput: RawData, server: WebSocket) => {
+export const mainConstroller = (dataInput: RawData, server: WebSocket) => {
     const parsedReq = deserialize(dataInput);
     const { type, data } = parsedReq;
-    console.log('main: controller: ',parsedReq);
     switch(type) {
         case CONSTANTS.REG:
             regPlayer(parsedReq, server);
@@ -41,13 +40,13 @@ const mainConstroller = (dataInput: RawData, server: WebSocket) => {
             randomAttack(data, server);
             break;
         case CONSTANTS.SINGLE_PLAY:
-            // singlePlay(data, server);
+            singlePlay(server);
             break;
         default:
-            console.log('from default of controller', type)
+            console.log(`DEFAULT CONTROLLER: ${type}`);
 
     }
-    // console.log(`Socket output => ${type}: ${parsedData}`)
+    console.log(`${type}: ${JSON.stringify(data)}`)
 }
 
 export default mainConstroller;

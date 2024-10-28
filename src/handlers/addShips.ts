@@ -11,6 +11,7 @@ const players = Players.getInstance();
 
 const addShips = (data: string, server: WebSocket) => {
     const parsedData = JSON.parse(data);
+    // console.dir(parsedData, { depth: null });
     const inputGameId = parsedData.gameId;
     const myGameOptions = gameOptions.getPlayersOptions();
     const ships = parsedData.ships;
@@ -48,11 +49,7 @@ const addShips = (data: string, server: WebSocket) => {
                 enemySocket.send(JSON.stringify(shipsOut));
             }
             turn(server, meId);
-        }
-
-
-        
-        // console.log('add ships: ', mePlayer?.name, ships);
+        }       
     }
 }
 

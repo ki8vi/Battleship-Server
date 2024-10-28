@@ -48,10 +48,10 @@ const createGame = (data: string, server: WebSocket): void => {
                     }
                 }
             } else {
-                console.log('You cannot play with yourself or you are already in the room!');
+                console.log('YOU IN ROOM ALREADY!');
             }
         } else {
-            console.log('You cannot play with yourself or you are already in the room!');
+            console.log('YOU IN ROOM ALREADY!');
         }
     }
 };

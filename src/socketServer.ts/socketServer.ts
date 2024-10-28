@@ -5,6 +5,7 @@ import RoomsStore from '../store/rooms';
 import updateRoom from '../handlers/updateRoom';
 import Players from '../store/players';
 import updateWinners from '../helpers/updateWinners';
+import disconnectedPlayer from '../helpers/desconnectedPlayer';
 
 const socketsMap = SocketStore.getInstance();
 const rooms = RoomsStore.getInstance();
@@ -14,28 +15,28 @@ export const startSocket = (port: number) => {
     const socket = new WebSocketServer({ port });
 
     socket.on('connection', (server) => {
-        console.log('Socket Connected');
+        console.log('CONNECTED...');
      
         server.on('message', (data) => { 
             mainConstroller(data, server);
-            // socketsMap.sendToSockets(updateRoom);
-            // socketsMap.sendToSockets(updateWinners);
         });
         
         server.on('close', () => {
             const plId = socketsMap.getIdBySocket(server);
             const player = players.getPlayers().find((pl) => pl.id === plId);
             if (plId && player) {
+                disconnectedPlayer(plId)
                 socketsMap.deleteSocket(plId);
                 rooms.deleteRoomsWithPlayers([plId])
-                socketsMap.sendToSockets(updateRoom)
-                console.log(`Socket for ${player.name} disconnected`);
+                socketsMap.sendToSockets(updateRoom);
+                socketsMap.sendToSockets(updateWinners);
+                console.log(`${player.name} DISCONNECTED...`);
             }
         });
         
         server.on('error', console.error);
     });
 
-    console.log(`Socket running on port: ${port}`);
+    console.log(`SOCKET INIT: ${port}`);
 };
 
